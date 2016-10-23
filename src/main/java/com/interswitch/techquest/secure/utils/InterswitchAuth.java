@@ -1,4 +1,4 @@
-package com.interswitch.techquest.interswitch.secure.utils;
+package com.interswitch.techquest.secure.utils;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;

@@ -1,4 +1,4 @@
-package com.interswitch.techquest.interswitch.secure.utils;
+package com.interswitch.techquest.secure.utils;
 
 import java.math.BigInteger;
 import java.security.KeyFactory;
