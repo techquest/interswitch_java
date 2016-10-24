@@ -114,6 +114,7 @@ public class InterswitchAuth {
         } catch (Exception ex) {
             ex.printStackTrace();
             in = new BufferedReader(new InputStreamReader(con.getErrorStream()));
+            throw ex;
         }
 
         String inputLine;
