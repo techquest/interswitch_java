@@ -5,7 +5,9 @@ import java.io.FileReader;
 import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.security.InvalidKeyException;
 import java.security.KeyFactory;
 import java.security.NoSuchAlgorithmException;
@@ -19,6 +21,7 @@ import java.util.logging.Logger;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 import org.bouncycastle.asn1.x509.SubjectPublicKeyInfo;
+import org.bouncycastle.cert.X509CertificateHolder;
 import org.bouncycastle.crypto.KeyGenerationParameters;
 
 import org.bouncycastle.crypto.engines.DESedeEngine;
@@ -45,7 +48,8 @@ public class Util {
 
         StringReader reader = new StringReader(certContent);
         PEMParser pemParser = new PEMParser(reader);
-        SubjectPublicKeyInfo subjectPublicKeyInfo = (SubjectPublicKeyInfo) pemParser.readObject();
+        X509CertificateHolder x509CertificateHolder = (X509CertificateHolder) pemParser.readObject();
+        SubjectPublicKeyInfo subjectPublicKeyInfo = x509CertificateHolder.getSubjectPublicKeyInfo();
         RSAKeyParameters rsaKeyParameters = (RSAKeyParameters) PublicKeyFactory.createKey(subjectPublicKeyInfo);
 
         return rsaKeyParameters;

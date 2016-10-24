@@ -13,7 +13,6 @@ import java.util.Map;
 import java.util.TimeZone;
 import java.util.UUID;
 
-
 import org.apache.commons.codec.binary.Base64;
 import org.json.JSONObject;
 
@@ -29,14 +28,9 @@ public class InterswitchAuth {
     private static final String AUTHORIZATION = "AUTHORIZATION";
 
     private static final String AUTHORIZATION_REALM = "InterswitchAuth";
-    private static final String AUTHORIZATION_REALM_BEARER = "Bearer";
     private static final String ISO_8859_1 = "ISO-8859-1";
 
-    public static HashMap<String, String> generateInterswitchAuth(
-            String httpMethod, String resourceUrl, String clientId,
-            String clientSecretKey, String additionalParameters,
-            String signatureMethod, String authType, String environment)
-            throws Exception {
+    public static HashMap<String, String> generateInterswitchAuth(String httpMethod, String resourceUrl, String clientId, String clientSecretKey, String additionalParameters, String signatureMethod) throws Exception {
         HashMap<String, String> interswitchAuth = new HashMap<String, String>();
 
         // Timezone MUST be Africa/Lagos.
@@ -70,16 +64,8 @@ public class InterswitchAuth {
 
         // encode signature as base 64
         String signature = new String(Base64.encodeBase64(signatureBytes));
-        // System.out.println("Cipher: " + signatureCipher);
-        if (authType.equalsIgnoreCase("oauth")) {
-            String bearerAuthorization = getAccessToken(clientId,
-                    clientSecretKey, environment);
-            interswitchAuth.put(AUTHORIZATION, AUTHORIZATION_REALM_BEARER + " "
-                    + bearerAuthorization);
-        } else {
-            interswitchAuth.put(AUTHORIZATION, authorization);
-        }
 
+        interswitchAuth.put(AUTHORIZATION, authorization);
         interswitchAuth.put(TIMESTAMP, String.valueOf(timestamp));
         interswitchAuth.put(NONCE, nonce);
         interswitchAuth.put(SIGNATURE_METHOD, signatureMethod);
@@ -88,26 +74,15 @@ public class InterswitchAuth {
         return interswitchAuth;
     }
 
-    public static String getAccessToken(String clientId, String clientSecret,
-            String environment) throws Exception {
-        String PRODUCTION_PASSPORT_RESOURCE_URL = "https://passport.interswitchng.com/passport/oauth/token";
-        String SANDBOX_PASSPORT_RESOURCE_URL = "http://sandbox.interswitchng.com/passport/oauth/token";
-        String PASSPORT_RESOURCE_URL = "";
-
-        if (environment.equalsIgnoreCase("live")) {
-            PASSPORT_RESOURCE_URL = PRODUCTION_PASSPORT_RESOURCE_URL;
-        } else {
-            PASSPORT_RESOURCE_URL = SANDBOX_PASSPORT_RESOURCE_URL;
-        }
-
-        URL obj = new URL(PASSPORT_RESOURCE_URL);
+    public static String getAccessToken(String clientId, String clientSecret, String passportUrl) throws Exception {
+        URL obj = new URL(passportUrl);
 
         System.setProperty("http.maxRedirects", "100");
         java.net.CookieManager cm = new java.net.CookieManager();
         java.net.CookieHandler.setDefault(cm);
 
         System.out.println("\nSending 'POST' request to URL : "
-                + PASSPORT_RESOURCE_URL);
+                + passportUrl);
         HttpURLConnection con = (HttpURLConnection) obj.openConnection();
         con.setRequestMethod("POST");
         String basicAuthCipher = clientId + ":" + clientSecret;
