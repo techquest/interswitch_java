@@ -122,17 +122,17 @@ public class InterswitchAuth {
             response.append(inputLine);
         }
         in.close();
-        // print result
-        JSONObject jSONObjectx = new JSONObject(response.toString());
-        System.out.println(jSONObjectx.toString(2));
-        // System.out.println(response.toString());
+
         ObjectMapper mapper = new ObjectMapper();
         Map<String, String> map = new HashMap<String, String>();
         map = mapper.readValue(response.toString(),
                 new TypeReference<Map<String, String>>() {
         });
 
-        return map.get("access_token");
+        String accesToken = map.get("access_token");
+        System.out.println("Access Token: " + accesToken);
+        
+        return accesToken;
     }
 
 }
