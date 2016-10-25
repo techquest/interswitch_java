@@ -122,7 +122,7 @@ public class TransactionSecurity {
         return secureData;
     }
 
-    public static String getPINBlock(String pin, String cvv2, String expiryDate, byte[] keyBytes) {
+    private static String getPINBlock(String pin, String cvv2, String expiryDate, byte[] keyBytes) {
         pin = null == pin || pin.equals("") ? "0000" : pin;
         cvv2 = null == cvv2 || cvv2.equals("") ? "000" : cvv2;
         expiryDate = null == expiryDate || expiryDate.equals("") ? "0000"
@@ -161,7 +161,7 @@ public class TransactionSecurity {
         return pinBlock;
     }
 
-    public static RSAKeyParameters getRSAKeyParameters(String certFilePath) throws Exception {
+    private static RSAKeyParameters getRSAKeyParameters(String certFilePath) throws Exception {
         String certContent = "";
         FileReader fileReader = new FileReader(certFilePath);
         BufferedReader bufferedReader = new BufferedReader(fileReader);
@@ -180,7 +180,7 @@ public class TransactionSecurity {
         return rsaKeyParameters;
     }
 
-    public static PublicKey getPublicKey(String certFilePath) throws Exception {
+    private static PublicKey getPublicKey(String certFilePath) throws Exception {
         Security.addProvider(new BouncyCastleProvider());
         RSAKeyParameters rSAKeyParameters = getRSAKeyParameters(certFilePath);
         RSAPublicKeySpec publicKeyspec = new RSAPublicKeySpec(rSAKeyParameters.getModulus(), rSAKeyParameters.getExponent());
@@ -190,7 +190,7 @@ public class TransactionSecurity {
         return publicKey;
     }
 
-    public static RSAKeyParameters getPublicSecureKey(String modulus,
+    private static RSAKeyParameters getPublicSecureKey(String modulus,
             String exponent) {
         BigInteger modulusByte = new BigInteger(Hex.decode(modulus));
         BigInteger exponentByte = new BigInteger(Hex.decode(exponent));
@@ -199,7 +199,7 @@ public class TransactionSecurity {
         return pkParameters;
     }
 
-    public static byte[] HexConverter(String str) {
+    private static byte[] HexConverter(String str) {
         try {
             str = new String(str.getBytes(), StandardCharsets.UTF_8);
             byte[] myBytes = Hex.decode(str);
@@ -210,7 +210,7 @@ public class TransactionSecurity {
         return null;
     }
 
-    public static String padRight(String data, int maxLen) {
+    private static String padRight(String data, int maxLen) {
 
         if (data == null || data.length() >= maxLen) {
             return data;
@@ -225,7 +225,7 @@ public class TransactionSecurity {
         return data;
     }
 
-    public static void zeroise(byte[] data) {
+    private static void zeroise(byte[] data) {
         int len = data.length;
 
         for (int i = 0; i < len; i++) {
@@ -233,7 +233,7 @@ public class TransactionSecurity {
         }
     }
 
-    public static String getMAC(String macData, byte[] macKey, int macVersion) {
+    private static String getMAC(String macData, byte[] macKey, int macVersion) {
         byte[] macBytes = new byte[4];
         byte[] macDataBytes = macData.getBytes();
         byte[] encodedMacBytes;
@@ -293,7 +293,7 @@ public class TransactionSecurity {
         }
     }
 
-    public static byte[] generateKey() {
+    private static byte[] generateKey() {
         SecureRandom sr = new SecureRandom();
         KeyGenerationParameters kgp = new KeyGenerationParameters(sr, DESedeParameters.DES_KEY_LENGTH * 16);
         DESedeKeyGenerator kg = new DESedeKeyGenerator();
@@ -305,13 +305,13 @@ public class TransactionSecurity {
         return desKeyBytes;
     }
 
-    public static String getMACDataVersion9(String... transactionParameters) {
+    private static String getMACDataVersion9(String... transactionParameters) {
         String macData = "";
         if (transactionParameters != null && transactionParameters.length > 0) {
             String transactionParameterTemp = "";
             for (String transactionParameter : transactionParameters) {
                 if (transactionParameter != null && !transactionParameter.isEmpty()) {
-                    transactionParameterTemp = "&" + transactionParameter;
+                    transactionParameterTemp += transactionParameter;
                 }
             }
             macData = macData + transactionParameterTemp;

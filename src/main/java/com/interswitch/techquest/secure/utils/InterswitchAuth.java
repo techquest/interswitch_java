@@ -60,7 +60,7 @@ public class InterswitchAuth {
         return interswitchAuth;
     }
 
-    public static String getSignature(String clientId, String clientSecretKey, String resourceUrl, String httpMethod, long timestamp, String nonce, String... transactionParameters) throws Exception {
+    private static String getSignature(String clientId, String clientSecretKey, String resourceUrl, String httpMethod, long timestamp, String nonce, String... transactionParameters) throws Exception {
         String https = "https";
         String http = "http";
         if (!resourceUrl.toLowerCase().contains(https.subSequence(0, https.length()))) {
@@ -84,13 +84,13 @@ public class InterswitchAuth {
         return signature.replaceAll("\\s", "");
     }
 
-    public static long generateTimestamp() {
+    private static long generateTimestamp() {
         Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone(LAGOS_TIME_ZONE));
         long epochTimeInSecs = calendar.getTimeInMillis() / 1000;
         return epochTimeInSecs;
     }
 
-    public static String generateNonce() {
+    private static String generateNonce() {
         UUID nonce = UUID.randomUUID();
         return nonce.toString().replaceAll("-", "");
     }
