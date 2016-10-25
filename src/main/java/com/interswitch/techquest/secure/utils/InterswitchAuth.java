@@ -9,7 +9,6 @@ import java.util.UUID;
 
 import org.apache.commons.codec.binary.Base64;
 
-
 public class InterswitchAuth {
 
     private static final String TIMESTAMP = "TIMESTAMP";
