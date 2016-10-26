@@ -2,8 +2,6 @@ package com.interswitch.techquest.auth;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.interswitch.techquest.auth.utils.ConstantUtils;
-
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.InputStreamReader;
@@ -20,10 +18,12 @@ import org.bouncycastle.util.encoders.Base64;
  */
 public class Passport {
 
-    public static String getClientAccessToken(String clientId, String clientSecret, String passportBaseUrl) throws Exception {
+    public static HashMap<String,String> getClientAccessToken(String clientId, String clientSecret, String passportBaseUrl) throws Exception {
     	
-    	String passportUrl = passportBaseUrl+ConstantUtils.PASSPORT_RESOURCE_URL;
+    	HashMap<String,String> responseMap = new HashMap<String, String>();
     	
+    	String passportUrl = passportBaseUrl+Interswitch.PASSPORT_RESOURCE_URL;
+    	String accesToken = null;
     	URL obj = new URL(passportUrl);
 
         System.setProperty("http.maxRedirects", "100");
@@ -67,11 +67,13 @@ public class Passport {
                     new TypeReference<Map<String, String>>() {
             });
 
-            String accesToken = map.get("access_token");
-
-            return accesToken;
+            accesToken = map.get("access_token");
         }
+        
+        responseMap.put(Interswitch.RESPONSE_CODE, String.valueOf(responseCode));
+		responseMap.put(Interswitch.RESPONSE_MESSAGE, response.toString());
+		responseMap.put(Interswitch.ACCESS_TOKEN, accesToken);
 
-        return null;
+        return responseMap;
     }
 }

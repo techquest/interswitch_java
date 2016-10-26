@@ -33,8 +33,6 @@ import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.openssl.PEMParser;
 import org.bouncycastle.util.encoders.Hex;
 
-import com.interswitch.techquest.auth.utils.ConstantUtils;
-
 /**
  *
  * @author Abiola.Adebanjo
@@ -132,8 +130,8 @@ public class TransactionSecurity {
 
         String pinBlock = getPINBlock(pan, cvv, expDate, keyBytes);
 
-        secureData.put(ConstantUtils.SECURE, encrytedSecure);
-        secureData.put(ConstantUtils.PINBLOCK, pinBlock);
+        secureData.put(Interswitch.SECURE, encrytedSecure);
+        secureData.put(Interswitch.PINBLOCK, pinBlock);
 
         return secureData;
     }
@@ -202,8 +200,8 @@ public class TransactionSecurity {
 
         String pinBlock = getPINBlock(pan, cvv, expDate, keyBytes);
 
-        secureData.put(ConstantUtils.SECURE, encrytedSecure);
-        secureData.put(ConstantUtils.PINBLOCK, pinBlock);
+        secureData.put(Interswitch.SECURE, encrytedSecure);
+        secureData.put(Interswitch.PINBLOCK, pinBlock);
 
         return secureData;
     }
@@ -272,8 +270,8 @@ public class TransactionSecurity {
 
         String pinBlock = getPINBlock(pan, cvv, expDate, keyBytes);
 
-        secureData.put(ConstantUtils.SECURE, encrytedSecure);
-        secureData.put(ConstantUtils.PINBLOCK, pinBlock);
+        secureData.put(Interswitch.SECURE, encrytedSecure);
+        secureData.put(Interswitch.PINBLOCK, pinBlock);
 
         return secureData;
     }
@@ -343,8 +341,8 @@ public class TransactionSecurity {
 
         String pinBlock = getPINBlock(pan, cvv, expDate, keyBytes);
 
-        secureData.put(ConstantUtils.SECURE, encrytedSecure);
-        secureData.put(ConstantUtils.PINBLOCK, pinBlock);
+        secureData.put(Interswitch.SECURE, encrytedSecure);
+        secureData.put(Interswitch.PINBLOCK, pinBlock);
 
         return secureData;
     }
@@ -545,48 +543,47 @@ public class TransactionSecurity {
     {
     	String macData = "";
     	
-        if (transactionParameters.get(ConstantUtils.TID) != null) {
-            macData += transactionParameters.get(ConstantUtils.TID);
-        }
-
-        if (transactionParameters.get(ConstantUtils.CARD_NAME) != null) {
-            macData += transactionParameters.get(ConstantUtils.CARD_NAME);
-        }
-
-        if (transactionParameters.get(ConstantUtils.TTID) != null) {
-            macData += transactionParameters.get(ConstantUtils.TTID);
-        }
-
-        if (transactionParameters.get(ConstantUtils.AMT) != null) {
-            macData += transactionParameters.get(ConstantUtils.AMT);
+        if (transactionParameters.get(Interswitch.TID) != null) {
+            macData += transactionParameters.get(Interswitch.TID);
         }
         
-		 if (transactionParameters.get(ConstantUtils.TO_ACCT_NO) != null) {
-	         macData += transactionParameters.get(ConstantUtils.TO_ACCT_NO);
+		 if (transactionParameters.get(Interswitch.PHONE_NUM) != null) {
+	         macData += transactionParameters.get(Interswitch.PHONE_NUM);
+	     }
+		 
+        if (transactionParameters.get(Interswitch.CARD_NAME) != null) {
+            macData += transactionParameters.get(Interswitch.CARD_NAME);
+        }
+
+        if (transactionParameters.get(Interswitch.TTID) != null) {
+            macData += transactionParameters.get(Interswitch.TTID);
+        }
+
+        if (transactionParameters.get(Interswitch.AMT) != null) {
+            macData += transactionParameters.get(Interswitch.AMT);
+        }
+        
+		 if (transactionParameters.get(Interswitch.TO_ACCT_NO) != null) {
+	         macData += transactionParameters.get(Interswitch.TO_ACCT_NO);
 	     }
 	
-		 if (transactionParameters.get(ConstantUtils.TO_BANK_CODE) != null) {
-	         macData += transactionParameters.get(ConstantUtils.TO_BANK_CODE);
+		 if (transactionParameters.get(Interswitch.TO_BANK_CODE) != null) {
+	         macData += transactionParameters.get(Interswitch.TO_BANK_CODE);
+	     }
+		 if (transactionParameters.get(Interswitch.CUST_NUM) != null) {
+	         macData += transactionParameters.get(Interswitch.CUST_NUM);
 	     }
 		 
-		 if (transactionParameters.get(ConstantUtils.PHONE_NUM) != null) {
-	         macData += transactionParameters.get(ConstantUtils.PHONE_NUM);
+		 if (transactionParameters.get(Interswitch.BILL_CODE) != null) {
+	         macData += transactionParameters.get(Interswitch.BILL_CODE);
 	     }
 		 
-		 if (transactionParameters.get(ConstantUtils.CUST_NUM) != null) {
-	         macData += transactionParameters.get(ConstantUtils.CUST_NUM);
+		 if (transactionParameters.get(Interswitch.TO_PHONE_NUM) != null) {
+	         macData += transactionParameters.get(Interswitch.TO_PHONE_NUM);
 	     }
 		 
-		 if (transactionParameters.get(ConstantUtils.BILL_CODE) != null) {
-	         macData += transactionParameters.get(ConstantUtils.BILL_CODE);
-	     }
-		 
-		 if (transactionParameters.get(ConstantUtils.TO_PHONE_NUM) != null) {
-	         macData += transactionParameters.get(ConstantUtils.TO_PHONE_NUM);
-	     }
-		 
-		 if (transactionParameters.get(ConstantUtils.PRODUCT_CODE) != null) {
-	         macData += transactionParameters.get(ConstantUtils.PRODUCT_CODE);
+		 if (transactionParameters.get(Interswitch.PRODUCT_CODE) != null) {
+	         macData += transactionParameters.get(Interswitch.PRODUCT_CODE);
 	     }
 
         return macData;

@@ -5,7 +5,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Map;
 import java.util.Map.Entry;
 
 import org.apache.http.HttpEntity;
@@ -14,8 +13,6 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
-
-import com.interswitch.techquest.auth.utils.ConstantUtils;
 
 public class Remote {
 
@@ -27,11 +24,11 @@ public class Remote {
 		URL obj = new URL(resourceUrl);
 		HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 		con.setRequestMethod("GET");
-		con.setRequestProperty("Authorization",interswitchAuth.get(ConstantUtils.AUTHORIZATION));
-		con.setRequestProperty("Timestamp", interswitchAuth.get(ConstantUtils.TIMESTAMP));
-		con.setRequestProperty("Nonce", interswitchAuth.get(ConstantUtils.NONCE));
-		con.setRequestProperty("Signature", interswitchAuth.get(ConstantUtils.SIGNATURE));
-		con.setRequestProperty("SignatureMethod",interswitchAuth.get(ConstantUtils.SIGNATURE_METHOD));
+		con.setRequestProperty("Authorization",interswitchAuth.get(Interswitch.AUTHORIZATION));
+		con.setRequestProperty("Timestamp", interswitchAuth.get(Interswitch.TIMESTAMP));
+		con.setRequestProperty("Nonce", interswitchAuth.get(Interswitch.NONCE));
+		con.setRequestProperty("Signature", interswitchAuth.get(Interswitch.SIGNATURE));
+		con.setRequestProperty("SignatureMethod",interswitchAuth.get(Interswitch.SIGNATURE_METHOD));
 		
 		int responseCode = con.getResponseCode();
 		
@@ -52,8 +49,8 @@ public class Remote {
 			response.append((char) c);
 		}
 		
-		responseMap.put(ConstantUtils.RESPONSE_CODE, String.valueOf(responseCode));
-		responseMap.put(ConstantUtils.RESPONSE_MESSAGE, response.toString());
+		responseMap.put(Interswitch.RESPONSE_CODE, String.valueOf(responseCode));
+		responseMap.put(Interswitch.RESPONSE_MESSAGE, response.toString());
 		
 		
 		return responseMap;
@@ -67,11 +64,11 @@ public class Remote {
 		URL obj = new URL(resourceUrl);
 		HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 		con.setRequestMethod("GET");
-		con.setRequestProperty("Authorization",interswitchAuth.get(ConstantUtils.AUTHORIZATION));
-		con.setRequestProperty("Timestamp", interswitchAuth.get(ConstantUtils.TIMESTAMP));
-		con.setRequestProperty("Nonce", interswitchAuth.get(ConstantUtils.NONCE));
-		con.setRequestProperty("Signature", interswitchAuth.get(ConstantUtils.SIGNATURE));
-		con.setRequestProperty("SignatureMethod",interswitchAuth.get(ConstantUtils.SIGNATURE_METHOD));
+		con.setRequestProperty("Authorization",interswitchAuth.get(Interswitch.AUTHORIZATION));
+		con.setRequestProperty("Timestamp", interswitchAuth.get(Interswitch.TIMESTAMP));
+		con.setRequestProperty("Nonce", interswitchAuth.get(Interswitch.NONCE));
+		con.setRequestProperty("Signature", interswitchAuth.get(Interswitch.SIGNATURE));
+		con.setRequestProperty("SignatureMethod",interswitchAuth.get(Interswitch.SIGNATURE_METHOD));
 		
 		if(extraHeaders != null && extraHeaders.size()>0)
 		{
@@ -101,8 +98,8 @@ public class Remote {
 			response.append((char) c);
 		}
 		
-		responseMap.put(ConstantUtils.RESPONSE_CODE, String.valueOf(responseCode));
-		responseMap.put(ConstantUtils.RESPONSE_MESSAGE, response.toString());
+		responseMap.put(Interswitch.RESPONSE_CODE, String.valueOf(responseCode));
+		responseMap.put(Interswitch.RESPONSE_MESSAGE, response.toString());
 		
 		
 		return responseMap;
@@ -115,11 +112,11 @@ public class Remote {
 		HttpClient client = new DefaultHttpClient();
 		HttpPost post = new HttpPost(resourceUrl);
 
-		post.setHeader("Authorization", interswitchAuth.get(ConstantUtils.AUTHORIZATION));
-		post.setHeader("Timestamp", interswitchAuth.get(ConstantUtils.TIMESTAMP));
-		post.setHeader("Nonce", interswitchAuth.get(ConstantUtils.NONCE));
-		post.setHeader("Signature", interswitchAuth.get(ConstantUtils.SIGNATURE));
-		post.setHeader("SignatureMethod", interswitchAuth.get(ConstantUtils.SIGNATURE_METHOD));
+		post.setHeader("Authorization", interswitchAuth.get(Interswitch.AUTHORIZATION));
+		post.setHeader("Timestamp", interswitchAuth.get(Interswitch.TIMESTAMP));
+		post.setHeader("Nonce", interswitchAuth.get(Interswitch.NONCE));
+		post.setHeader("Signature", interswitchAuth.get(Interswitch.SIGNATURE));
+		post.setHeader("SignatureMethod", interswitchAuth.get(Interswitch.SIGNATURE_METHOD));
 		
 		StringEntity entity = new StringEntity(jsonText);
 		entity.setContentType("application/json");
@@ -139,8 +136,8 @@ public class Remote {
 			}
 		}
 		
-		responseMap.put(ConstantUtils.RESPONSE_CODE, String.valueOf(responseCode));
-		responseMap.put(ConstantUtils.RESPONSE_MESSAGE, stringBuffer.toString());
+		responseMap.put(Interswitch.RESPONSE_CODE, String.valueOf(responseCode));
+		responseMap.put(Interswitch.RESPONSE_MESSAGE, stringBuffer.toString());
 		
 		
 		return responseMap;
@@ -153,11 +150,11 @@ public class Remote {
 		HttpClient client = new DefaultHttpClient();
 		HttpPost post = new HttpPost(resourceUrl);
 
-		post.setHeader("Authorization", interswitchAuth.get(ConstantUtils.AUTHORIZATION));
-		post.setHeader("Timestamp", interswitchAuth.get(ConstantUtils.TIMESTAMP));
-		post.setHeader("Nonce", interswitchAuth.get(ConstantUtils.NONCE));
-		post.setHeader("Signature", interswitchAuth.get(ConstantUtils.SIGNATURE));
-		post.setHeader("SignatureMethod", interswitchAuth.get(ConstantUtils.SIGNATURE_METHOD));
+		post.setHeader("Authorization", interswitchAuth.get(Interswitch.AUTHORIZATION));
+		post.setHeader("Timestamp", interswitchAuth.get(Interswitch.TIMESTAMP));
+		post.setHeader("Nonce", interswitchAuth.get(Interswitch.NONCE));
+		post.setHeader("Signature", interswitchAuth.get(Interswitch.SIGNATURE));
+		post.setHeader("SignatureMethod", interswitchAuth.get(Interswitch.SIGNATURE_METHOD));
 		
 		if(extraHeaders != null && extraHeaders.size()>0)
 		{
@@ -186,8 +183,8 @@ public class Remote {
 			}
 		}
 		
-		responseMap.put(ConstantUtils.RESPONSE_CODE, String.valueOf(responseCode));
-		responseMap.put(ConstantUtils.RESPONSE_MESSAGE, stringBuffer.toString());
+		responseMap.put(Interswitch.RESPONSE_CODE, String.valueOf(responseCode));
+		responseMap.put(Interswitch.RESPONSE_MESSAGE, stringBuffer.toString());
 		
 		
 		return responseMap;
