@@ -1,7 +1,9 @@
-package com.interswitch.techquest.auth;
+package com.interswitch.techquest.auth.helpers;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.interswitch.techquest.auth.Interswitch;
+
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.InputStreamReader;

@@ -2,6 +2,11 @@ package com.interswitch.techquest.auth;
 
 import java.util.HashMap;
 
+import com.interswitch.techquest.auth.helpers.Passport;
+import com.interswitch.techquest.auth.helpers.Remote;
+import com.interswitch.techquest.auth.helpers.RequestHeaders;
+import com.interswitch.techquest.auth.helpers.TransactionSecurity;
+
 public class Interswitch {
 	
 	public static final String ENV_SANDBOX = "SANDBOX";
@@ -32,6 +37,8 @@ public class Interswitch {
 	
 	public static final String SECURE = "SECURE";
 	public static final String PINBLOCK = "PINBLOCK";
+	
+	public static final String TERMINAL_ID = "TerminalId";
 	
 	
 	public static final String TID = "tid";

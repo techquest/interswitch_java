@@ -1,4 +1,4 @@
-package com.interswitch.techquest.auth;
+package com.interswitch.techquest.auth.helpers;
 
 import java.net.URLEncoder;
 import java.security.MessageDigest;
@@ -8,6 +8,8 @@ import java.util.TimeZone;
 import java.util.UUID;
 
 import org.apache.commons.codec.binary.Base64;
+
+import com.interswitch.techquest.auth.Interswitch;
 
 public class RequestHeaders {
 

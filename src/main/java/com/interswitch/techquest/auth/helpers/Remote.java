@@ -1,4 +1,4 @@
-package com.interswitch.techquest.auth;
+package com.interswitch.techquest.auth.helpers;
 
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -13,6 +13,8 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
+
+import com.interswitch.techquest.auth.Interswitch;
 
 public class Remote {
 

@@ -1,4 +1,4 @@
-package com.interswitch.techquest.auth;
+package com.interswitch.techquest.auth.helpers;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -32,6 +32,8 @@ import org.bouncycastle.crypto.util.PublicKeyFactory;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.openssl.PEMParser;
 import org.bouncycastle.util.encoders.Hex;
+
+import com.interswitch.techquest.auth.Interswitch;
 
 /**
  *
