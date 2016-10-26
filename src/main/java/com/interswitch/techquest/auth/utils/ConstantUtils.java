@@ -2,6 +2,13 @@ package com.interswitch.techquest.auth.utils;
 
 public class ConstantUtils {
 	
+	public static final String ENV_SANDBOX = "SANDBOX";
+	public static final String ENV_PROD = "PRODUCTION";
+	
+	public static final String SANDBOX_BASE_URL = "https://sandbox.interswitchng.com/";
+	public static final String PRODUCTION_BASE_URL = "https://saturn.interswitchng.com/";
+	public static final String PASSPORT_RESOURCE_URL = "passport/oauth/token"; 
+	
 	public static final String TIMESTAMP = "TIMESTAMP";
 	public static final String NONCE = "NONCE";
 	public static final String SIGNATURE_METHOD = "SIGNATURE_METHOD";

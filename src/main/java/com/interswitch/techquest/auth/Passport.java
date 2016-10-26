@@ -2,6 +2,8 @@ package com.interswitch.techquest.auth;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.interswitch.techquest.auth.utils.ConstantUtils;
+
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.InputStreamReader;
@@ -9,6 +11,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
+
 import org.bouncycastle.util.encoders.Base64;
 
 /**
@@ -17,8 +20,11 @@ import org.bouncycastle.util.encoders.Base64;
  */
 public class Passport {
 
-    public static String getClientAccessToken(String clientId, String clientSecret, String passportUrl) throws Exception {
-        URL obj = new URL(passportUrl);
+    public static String getClientAccessToken(String clientId, String clientSecret, String passportBaseUrl) throws Exception {
+    	
+    	String passportUrl = passportBaseUrl+ConstantUtils.PASSPORT_RESOURCE_URL;
+    	
+    	URL obj = new URL(passportUrl);
 
         System.setProperty("http.maxRedirects", "100");
         java.net.CookieManager cm = new java.net.CookieManager();

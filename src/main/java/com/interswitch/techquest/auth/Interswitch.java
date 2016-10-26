@@ -9,17 +9,27 @@ public class Interswitch {
     String clientId;
     String clientSecret;
     String environment;
-    String passportUrl;
+    String passportBaseUrl;
     
     public Interswitch(String clientId,String clientSecret) {
     	this.clientId = clientId;
     	this.clientSecret = clientSecret;
-    	this.environment = "SANDBOX";
+    	this.environment = ConstantUtils.ENV_SANDBOX;
+    	this.passportBaseUrl = ConstantUtils.SANDBOX_BASE_URL;
 	}
     public Interswitch(String clientId,String clientSecret,String environment) {
     	this.clientId = clientId;
     	this.clientSecret = clientSecret;
     	this.environment = environment;
+    	
+    	if(environment.equalsIgnoreCase(ConstantUtils.ENV_PROD))
+    	{
+    		this.passportBaseUrl = ConstantUtils.PRODUCTION_BASE_URL;
+    	}
+    	else
+    	{
+    		this.passportBaseUrl = ConstantUtils.SANDBOX_BASE_URL;
+    	}
 	}
     
     public HashMap<String, String> getSecureData(String publicCert, String pan, String expDate, String cvv, String pin) throws Exception
@@ -48,7 +58,7 @@ public class Interswitch {
 
     public HashMap<String, String> send(String uri, String httpMethod, String data) throws Exception
     {
-    	String accessToken = Passport.getClientAccessToken(clientId, clientSecret, passportUrl);
+    	String accessToken = Passport.getClientAccessToken(clientId, clientSecret, passportBaseUrl);
     	HashMap<String, String> headers = RequestHeaders.getBearerSecurityHeaders(clientId, clientSecret, accessToken, uri, httpMethod);
     	if(httpMethod.equalsIgnoreCase("GET"))
     	{
