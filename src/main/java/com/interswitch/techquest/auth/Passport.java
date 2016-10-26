@@ -1,4 +1,4 @@
-package com.interswitch.techquest.secure.utils;
+package com.interswitch.techquest.auth;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -43,7 +43,6 @@ public class Passport {
         try {
             in = new BufferedReader(new InputStreamReader(con.getInputStream()));
         } catch (Exception ex) {
-            ex.printStackTrace();
             in = new BufferedReader(new InputStreamReader(con.getErrorStream()));
         }
 

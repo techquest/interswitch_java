@@ -1,4 +1,4 @@
-package com.interswitch.techquest.secure.utils;
+package com.interswitch.techquest.auth;
 
 import java.net.URLEncoder;
 import java.security.MessageDigest;
@@ -9,21 +9,11 @@ import java.util.UUID;
 
 import org.apache.commons.codec.binary.Base64;
 
-public class InterswitchAuth {
+import com.interswitch.techquest.auth.utils.ConstantUtils;
 
-    private static final String TIMESTAMP = "TIMESTAMP";
-    private static final String NONCE = "NONCE";
-    private static final String SIGNATURE_METHOD = "SIGNATURE_METHOD";
-    private static final String SIGNATURE = "SIGNATURE";
-    private static final String AUTHORIZATION = "AUTHORIZATION";
-    private static final String SIGNATURE_METHOD_VALUE = "SHA-512";
-    public static final String LAGOS_TIME_ZONE = "Africa/Lagos";
+public class RequestHeaders {
 
-    private static final String ISWAUTH_AUTHORIZATION_REALM = "InterswitchAuth";
-    private static final String BEARER_AUTHORIZATION_REALM = "Bearer";
-    private static final String ISO_8859_1 = "ISO-8859-1";
-
-    public static HashMap<String, String> getISWAuthSecurityHeaders(String clientId, String clientSecretKey, String resourceUrl, String httpMethod, String... transactionParams) throws Exception {
+	public static HashMap<String, String> getISWAuthSecurityHeaders(String clientId, String clientSecretKey, String resourceUrl, String httpMethod, String... transactionParams) throws Exception {
         HashMap<String, String> interswitchAuth = new HashMap<String, String>();
 
         long timestamp = generateTimestamp();
@@ -31,13 +21,13 @@ public class InterswitchAuth {
         String signature = getSignature(clientId, clientSecretKey, resourceUrl, httpMethod, timestamp, nonce, transactionParams);
 
         String clientIdBase64 = new String(Base64.encodeBase64(clientId.getBytes()));
-        String authorization = ISWAUTH_AUTHORIZATION_REALM + " " + clientIdBase64;
+        String authorization = ConstantUtils.ISWAUTH_AUTHORIZATION_REALM + " " + clientIdBase64;
 
-        interswitchAuth.put(AUTHORIZATION, authorization);
-        interswitchAuth.put(TIMESTAMP, String.valueOf(timestamp));
-        interswitchAuth.put(NONCE, nonce);
-        interswitchAuth.put(SIGNATURE_METHOD, SIGNATURE_METHOD_VALUE);
-        interswitchAuth.put(SIGNATURE, signature);
+        interswitchAuth.put(ConstantUtils.AUTHORIZATION, authorization);
+        interswitchAuth.put(ConstantUtils.TIMESTAMP, String.valueOf(timestamp));
+        interswitchAuth.put(ConstantUtils.NONCE, nonce);
+        interswitchAuth.put(ConstantUtils.SIGNATURE_METHOD, ConstantUtils.SIGNATURE_METHOD_VALUE);
+        interswitchAuth.put(ConstantUtils.SIGNATURE, signature);
 
         return interswitchAuth;
     }
@@ -49,13 +39,13 @@ public class InterswitchAuth {
         String nonce = generateNonce();
         String signature = getSignature(clientId, clientSecretKey, resourceUrl, httpMethod, timestamp, nonce, transactionParams);
 
-        String authorization = BEARER_AUTHORIZATION_REALM + " " + accessToken;
+        String authorization = ConstantUtils.BEARER_AUTHORIZATION_REALM + " " + accessToken;
 
-        interswitchAuth.put(AUTHORIZATION, authorization);
-        interswitchAuth.put(TIMESTAMP, String.valueOf(timestamp));
-        interswitchAuth.put(NONCE, nonce);
-        interswitchAuth.put(SIGNATURE_METHOD, SIGNATURE_METHOD_VALUE);
-        interswitchAuth.put(SIGNATURE, signature);
+        interswitchAuth.put(ConstantUtils.AUTHORIZATION, authorization);
+        interswitchAuth.put(ConstantUtils.TIMESTAMP, String.valueOf(timestamp));
+        interswitchAuth.put(ConstantUtils.NONCE, nonce);
+        interswitchAuth.put(ConstantUtils.SIGNATURE_METHOD, ConstantUtils.SIGNATURE_METHOD_VALUE);
+        interswitchAuth.put(ConstantUtils.SIGNATURE, signature);
 
         return interswitchAuth;
     }
@@ -66,7 +56,7 @@ public class InterswitchAuth {
         if (!resourceUrl.toLowerCase().contains(https.subSequence(0, https.length()))) {
             resourceUrl = resourceUrl.replace(http, https);
         }
-        resourceUrl = URLEncoder.encode(resourceUrl, ISO_8859_1);
+        resourceUrl = URLEncoder.encode(resourceUrl, ConstantUtils.ISO_8859_1);
         String signatureCipher = httpMethod + "&" + resourceUrl + "&" + timestamp + "&" + nonce + "&" + clientId + "&" + clientSecretKey;
         if (transactionParameters != null && transactionParameters.length > 0) {
             String transactionParameterTemp = "";
@@ -78,14 +68,14 @@ public class InterswitchAuth {
             signatureCipher = signatureCipher + transactionParameterTemp;
         }
 
-        MessageDigest messagedigest = MessageDigest.getInstance(SIGNATURE_METHOD_VALUE);
+        MessageDigest messagedigest = MessageDigest.getInstance(ConstantUtils.SIGNATURE_METHOD_VALUE);
         byte[] signaturebytes = messagedigest.digest(signatureCipher.getBytes());
         String signature = new String(org.bouncycastle.util.encoders.Base64.encode(signaturebytes)).trim();
         return signature.replaceAll("\\s", "");
     }
 
     private static long generateTimestamp() {
-        Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone(LAGOS_TIME_ZONE));
+        Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone(ConstantUtils.LAGOS_TIME_ZONE));
         long epochTimeInSecs = calendar.getTimeInMillis() / 1000;
         return epochTimeInSecs;
     }
@@ -94,5 +84,4 @@ public class InterswitchAuth {
         UUID nonce = UUID.randomUUID();
         return nonce.toString().replaceAll("-", "");
     }
-
 }
