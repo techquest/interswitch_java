@@ -130,7 +130,7 @@ public class TransactionSecurity {
 
         zeroise(secureBytes);
 
-        String pinBlock = getPINBlock(pan, cvv, expDate, keyBytes);
+        String pinBlock = getPINBlock(pin, cvv, expDate, keyBytes);
 
         secureData.put(Interswitch.SECURE, encrytedSecure);
         secureData.put(Interswitch.PINBLOCK, pinBlock);
@@ -200,7 +200,7 @@ public class TransactionSecurity {
 
         zeroise(secureBytes);
 
-        String pinBlock = getPINBlock(pan, cvv, expDate, keyBytes);
+        String pinBlock = getPINBlock(pin, cvv, expDate, keyBytes);
 
         secureData.put(Interswitch.SECURE, encrytedSecure);
         secureData.put(Interswitch.PINBLOCK, pinBlock);
@@ -270,7 +270,7 @@ public class TransactionSecurity {
 
         zeroise(secureBytes);
 
-        String pinBlock = getPINBlock(pan, cvv, expDate, keyBytes);
+        String pinBlock = getPINBlock(pin, cvv, expDate, keyBytes);
 
         secureData.put(Interswitch.SECURE, encrytedSecure);
         secureData.put(Interswitch.PINBLOCK, pinBlock);
@@ -341,7 +341,7 @@ public class TransactionSecurity {
 
         zeroise(secureBytes);
 
-        String pinBlock = getPINBlock(pan, cvv, expDate, keyBytes);
+        String pinBlock = getPINBlock(pin, cvv, expDate, keyBytes);
 
         secureData.put(Interswitch.SECURE, encrytedSecure);
         secureData.put(Interswitch.PINBLOCK, pinBlock);
@@ -364,11 +364,13 @@ public class TransactionSecurity {
         byte randomBytes = 0x0;
         int randomDigit = (int) ((randomBytes * 10) / 128);
         randomDigit = Math.abs(randomDigit);
+//        System.out.println(randomDigit);
         int pinpadlen = 16 - clearPINBlock.length();
+//        System.out.println(pinpadlen);
         for (int i = 0; i < pinpadlen; i++) {
             clearPINBlock = clearPINBlock + randomDigit;
         }
-
+//        System.out.println(clearPINBlock);
         DESedeEngine engine = new DESedeEngine();
         DESedeParameters keyParameters = new DESedeParameters(keyBytes);
         engine.init(true, keyParameters);
@@ -590,4 +592,10 @@ public class TransactionSecurity {
 
         return macData;
     }
+
+	public static String getMacData(HashMap<String, String> additionalSecureData) {
+		String macData = getMACDataVersion9(additionalSecureData);
+		byte[] macKey = new byte[16];
+		return getMAC(macData, macKey, 12);
+	}
 }

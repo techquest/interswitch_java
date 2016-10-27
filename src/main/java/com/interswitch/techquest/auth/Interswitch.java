@@ -12,9 +12,9 @@ public class Interswitch {
 	public static final String ENV_SANDBOX = "SANDBOX";
 	public static final String ENV_PROD = "PRODUCTION";
 	
-	public static final String SANDBOX_BASE_URL = "http://172.35.2.6:7073/";//"https://sandbox.interswitchng.com/";
+	public static final String SANDBOX_BASE_URL = "https://sandbox.interswitchng.com/";
 	public static final String PRODUCTION_BASE_URL = "https://saturn.interswitchng.com/";
-	public static final String PASSPORT_RESOURCE_URL = "passport/oauth/token"; 
+	public static final String PASSPORT_RESOURCE_URL = "passport/oauth/token";
 	
 	public static final String TIMESTAMP = "TIMESTAMP";
 	public static final String NONCE = "NONCE";
@@ -57,13 +57,14 @@ public class Interswitch {
     String clientId;
     String clientSecret;
     String environment;
-    String passportBaseUrl;
+    String baseUrl;
+    String interswitchBaseUrl;
     
     public Interswitch(String clientId,String clientSecret) {
     	this.clientId = clientId;
     	this.clientSecret = clientSecret;
     	this.environment = Interswitch.ENV_SANDBOX;
-    	this.passportBaseUrl = Interswitch.SANDBOX_BASE_URL;
+    	this.baseUrl = Interswitch.SANDBOX_BASE_URL;
 	}
     public Interswitch(String clientId,String clientSecret,String environment) {
     	this.clientId = clientId;
@@ -72,33 +73,41 @@ public class Interswitch {
     	
     	if(environment.equalsIgnoreCase(Interswitch.ENV_PROD))
     	{
-    		this.passportBaseUrl = Interswitch.PRODUCTION_BASE_URL;
+    		this.baseUrl = Interswitch.PRODUCTION_BASE_URL;
     	}
     	else
     	{
-    		this.passportBaseUrl = Interswitch.SANDBOX_BASE_URL;
+    		this.baseUrl = Interswitch.SANDBOX_BASE_URL;
     	}
 	}
     
-    public HashMap<String, String> getSecureData(String publicCert, String pan, String expDate, String cvv, String pin) throws Exception
+    public HashMap<String, String> getSecureData(String pan, String expDate, String cvv, String pin) throws Exception
+    {
+    	TransactionSecurity transactionSecurity = new TransactionSecurity();
+    	String publicExponent = "010001";
+		String publicModulus = "009c7b3ba621a26c4b02f48cfc07ef6ee0aed8e12b4bd11c5cc0abf80d5206be69e1891e60fc88e2d565e2fabe4d0cf630e318a6c721c3ded718d0c530cdf050387ad0a30a336899bbda877d0ec7c7c3ffe693988bfae0ffbab71b25468c7814924f022cb5fda36e0d2c30a7161fa1c6fb5fbd7d05adbef7e68d48f8b6c5f511827c4b1c5ed15b6f20555affc4d0857ef7ab2b5c18ba22bea5d3a79bd1834badb5878d8c7a4b19da20c1f62340b1f7fbf01d2f2e97c9714a9df376ac0ea58072b2b77aeb7872b54a89667519de44d0fc73540beeaec4cb778a45eebfbefe2d817a8a8319b2bc6d9fa714f5289ec7c0dbc43496d71cf2a642cb679b0fc4072fd2cf";
+    	return transactionSecurity.getSecureData(publicExponent, publicModulus, pan, expDate, cvv, pin);
+    }
+    
+    public HashMap<String, String> getSecureData(String pan, String expDate, String cvv, String pin,String publicCert) throws Exception
     {
     	TransactionSecurity transactionSecurity = new TransactionSecurity();
     	return transactionSecurity.getSecureData(publicCert, pan, expDate, cvv, pin);
     }
     
-    public HashMap<String, String> getSecureData(String publicCert, String pan, String expDate, String cvv, String pin,HashMap<String, String>transactionParameters) throws Exception
+    public HashMap<String, String> getSecureData(String pan, String expDate, String cvv, String pin,HashMap<String, String>transactionParameters,String publicCert) throws Exception
     {
     	TransactionSecurity transactionSecurity = new TransactionSecurity();
     	return transactionSecurity.getSecureData(publicCert, pan, expDate, cvv, pin,transactionParameters);
     }
     
-    public HashMap<String, String> getSecureData(String publicExponent, String publicModulus, String pan, String expDate, String cvv, String pin) throws Exception
+    public HashMap<String, String> getSecureData(String pan, String expDate, String cvv, String pin,String publicExponent, String publicModulus) throws Exception
     {
     	TransactionSecurity transactionSecurity = new TransactionSecurity();
     	return transactionSecurity.getSecureData(publicExponent, publicModulus, pan, expDate, cvv, pin);
     }
     
-    public HashMap<String, String> getSecureData(String publicExponent, String publicModulus, String pan, String expDate, String cvv, String pin,HashMap<String, String>transactionParameters) throws Exception
+    public HashMap<String, String> getSecureData(String pan, String expDate, String cvv, String pin,HashMap<String, String>transactionParameters,String publicExponent, String publicModulus) throws Exception
     {
     	TransactionSecurity transactionSecurity = new TransactionSecurity();
     	return transactionSecurity.getSecureData(publicExponent, publicModulus, pan, expDate, cvv, pin,transactionParameters);
@@ -107,20 +116,21 @@ public class Interswitch {
     //Send to Remote uri,httpMethod,jsonData
     public HashMap<String, String> send(String uri, String httpMethod, String jsonData) throws Exception
     {
-    	HashMap<String, String> accessToken = Passport.getClientAccessToken(clientId, clientSecret, passportBaseUrl);
+    	String url = baseUrl+uri;
+    	HashMap<String, String> accessToken = Passport.getClientAccessToken(clientId, clientSecret, baseUrl);
     	
     	String responseCode = accessToken.get(Interswitch.RESPONSE_CODE);
     	
     	if (responseCode.equalsIgnoreCase("200")) 
     	{
-    		HashMap<String, String> headers = RequestHeaders.getBearerSecurityHeaders(clientId, clientSecret, accessToken.get(Interswitch.ACCESS_TOKEN), uri, httpMethod);
+    		HashMap<String, String> headers = RequestHeaders.getBearerSecurityHeaders(clientId, clientSecret, accessToken.get(Interswitch.ACCESS_TOKEN), url, httpMethod);
         	if(httpMethod.equalsIgnoreCase("GET"))
         	{
-        		return Remote.sendGET(uri, headers);
+        		return Remote.sendGET(url, headers);
         	}
         	else if (httpMethod.equalsIgnoreCase("POST"))
         	{
-        		return Remote.sendPOST(jsonData, uri, headers);
+        		return Remote.sendPOST(jsonData, url, headers);
         	}
     	}
     	
@@ -129,20 +139,21 @@ public class Interswitch {
   //Send to Remote uri,httpMethod,jsonData,additonalSignedParameters,extraHttpHeaders
     public HashMap<String, String> send(String uri, String httpMethod, String jsonData,String additonalSignedParameters,HashMap<String, String> extraHttpHeaders) throws Exception
     {
-    	HashMap<String, String> accessToken = Passport.getClientAccessToken(clientId, clientSecret, passportBaseUrl);
+    	String url = baseUrl+uri;
+    	HashMap<String, String> accessToken = Passport.getClientAccessToken(clientId, clientSecret, baseUrl);
     	
     	String responseCode = accessToken.get(Interswitch.RESPONSE_CODE);
     	
     	if (responseCode.equalsIgnoreCase("200")) 
     	{
-    		HashMap<String, String> headers = RequestHeaders.getBearerSecurityHeaders(clientId, clientSecret, accessToken.get(Interswitch.ACCESS_TOKEN), uri, httpMethod);
+    		HashMap<String, String> headers = RequestHeaders.getBearerSecurityHeaders(clientId, clientSecret, accessToken.get(Interswitch.ACCESS_TOKEN), url, httpMethod);
         	if(httpMethod.equalsIgnoreCase("GET"))
         	{
-        		return Remote.sendGET(uri, headers,extraHttpHeaders);
+        		return Remote.sendGET(url, headers,extraHttpHeaders);
         	}
         	else if (httpMethod.equalsIgnoreCase("POST"))
         	{
-        		return Remote.sendPOST(jsonData, uri, headers,extraHttpHeaders);
+        		return Remote.sendPOST(jsonData, url, headers,extraHttpHeaders);
         	}
     	}
     	
@@ -151,20 +162,21 @@ public class Interswitch {
     //Send to Remote uri,httpMethod,jsonData,extraHttpHeaders
     public HashMap<String, String> send(String uri, String httpMethod, String jsonData,HashMap<String, String> extraHttpHeaders) throws Exception
     {
-    	HashMap<String, String> accessToken = Passport.getClientAccessToken(clientId, clientSecret, passportBaseUrl);
+    	String url = baseUrl+uri;
+    	HashMap<String, String> accessToken = Passport.getClientAccessToken(clientId, clientSecret, baseUrl);
     	
     	String responseCode = accessToken.get(Interswitch.RESPONSE_CODE);
     	
     	if (responseCode.equalsIgnoreCase("200")) 
     	{
-    		HashMap<String, String> headers = RequestHeaders.getBearerSecurityHeaders(clientId, clientSecret, accessToken.get(Interswitch.ACCESS_TOKEN), uri, httpMethod);
+    		HashMap<String, String> headers = RequestHeaders.getBearerSecurityHeaders(clientId, clientSecret, accessToken.get(Interswitch.ACCESS_TOKEN), url, httpMethod);
         	if(httpMethod.equalsIgnoreCase("GET"))
         	{
-        		return Remote.sendGET(uri, headers,extraHttpHeaders);
+        		return Remote.sendGET(url, headers,extraHttpHeaders);
         	}
         	else if (httpMethod.equalsIgnoreCase("POST"))
         	{
-        		return Remote.sendPOST(jsonData, uri, headers,extraHttpHeaders);
+        		return Remote.sendPOST(jsonData, url, headers,extraHttpHeaders);
         	}
     	}
     	
@@ -173,20 +185,21 @@ public class Interswitch {
 //    Send to Remote uri,httpMethod,jsonData,additonalSignedParameters
     public HashMap<String, String> send(String uri, String httpMethod, String jsonData,String signedParameters) throws Exception
     {
-    	HashMap<String, String> accessToken = Passport.getClientAccessToken(clientId, clientSecret, passportBaseUrl);
+    	String url = baseUrl+uri;
+    	HashMap<String, String> accessToken = Passport.getClientAccessToken(clientId, clientSecret, baseUrl);
     	
     	String responseCode = accessToken.get(Interswitch.RESPONSE_CODE);
     	
     	if (responseCode.equalsIgnoreCase("200")) 
     	{
-    		HashMap<String, String> headers = RequestHeaders.getBearerSecurityHeaders(clientId, clientSecret, accessToken.get(Interswitch.ACCESS_TOKEN), uri, httpMethod,signedParameters);
+    		HashMap<String, String> headers = RequestHeaders.getBearerSecurityHeaders(clientId, clientSecret, accessToken.get(Interswitch.ACCESS_TOKEN), url, httpMethod,signedParameters);
         	if(httpMethod.equalsIgnoreCase("GET"))
         	{
-        		return Remote.sendGET(uri, headers);
+        		return Remote.sendGET(url, headers);
         	}
         	else if (httpMethod.equalsIgnoreCase("POST"))
         	{
-        		return Remote.sendPOST(jsonData, uri, headers);
+        		return Remote.sendPOST(jsonData, url, headers);
         	}
     	}
     	
@@ -195,14 +208,15 @@ public class Interswitch {
     
     public HashMap<String, String> sendWithAccessToken(String uri, String httpMethod, String data, String accessToken) throws Exception
     {
+    	String url = baseUrl+uri;
     	HashMap<String, String> headers = RequestHeaders.getBearerSecurityHeaders(clientId, clientSecret, accessToken, uri, httpMethod);
     	if(httpMethod.equalsIgnoreCase("GET"))
     	{
-    		return Remote.sendGET(uri, headers);
+    		return Remote.sendGET(url, headers);
     	}
     	else if (httpMethod.equalsIgnoreCase("POST"))
     	{
-    		return Remote.sendPOST(data, uri, headers);
+    		return Remote.sendPOST(data, url, headers);
     	}
     	
     	return null;
@@ -210,44 +224,44 @@ public class Interswitch {
     
     public HashMap<String, String> sendWithAccessToken(String uri, String httpMethod, String data, String accessToken, String signedParameters) throws Exception
     {
-    
-    	HashMap<String, String> headers = RequestHeaders.getBearerSecurityHeaders(clientId, clientSecret, accessToken, uri, httpMethod,signedParameters);
+    	String url = baseUrl+uri;
+    	HashMap<String, String> headers = RequestHeaders.getBearerSecurityHeaders(clientId, clientSecret, accessToken, url, httpMethod,signedParameters);
     	if(httpMethod.equalsIgnoreCase("GET"))
     	{
-    		return Remote.sendGET(uri, headers);
+    		return Remote.sendGET(url, headers);
     	}
     	else if (httpMethod.equalsIgnoreCase("POST"))
     	{
-    		return Remote.sendPOST(data, uri, headers);
+    		return Remote.sendPOST(data, url, headers);
     	}
     	return null;
     }
     public HashMap<String, String> sendWithAccessToken(String uri, String httpMethod, String data, String accessToken, HashMap<String, String> httpHeaders) throws Exception
     {
-    	
-    	HashMap<String, String> headers = RequestHeaders.getBearerSecurityHeaders(clientId, clientSecret, accessToken, uri, httpMethod);
+    	String url = baseUrl+uri;
+    	HashMap<String, String> headers = RequestHeaders.getBearerSecurityHeaders(clientId, clientSecret, accessToken, url, httpMethod);
     	if(httpMethod.equalsIgnoreCase("GET"))
     	{
-    		Remote.sendGET(uri, headers,httpHeaders);
+    		Remote.sendGET(url, headers,httpHeaders);
     	}
     	else if (httpMethod.equalsIgnoreCase("POST"))
     	{
-    		Remote.sendPOST(data, uri, headers,httpHeaders);
+    		Remote.sendPOST(data, url, headers,httpHeaders);
     	}
     	return null;
     }
     
     public HashMap<String, String> sendWithAccessToken(String uri, String httpMethod, String data, String accessToken, HashMap<String, String> httpHeaders, String signedParameters) throws Exception
     {
-    
-    	HashMap<String, String> headers = RequestHeaders.getBearerSecurityHeaders(clientId, clientSecret, accessToken, uri, httpMethod,signedParameters);
+    	String url = baseUrl+uri;
+    	HashMap<String, String> headers = RequestHeaders.getBearerSecurityHeaders(clientId, clientSecret, accessToken, url, httpMethod,signedParameters);
     	if(httpMethod.equalsIgnoreCase("GET"))
     	{
-    		Remote.sendGET(uri, headers,httpHeaders);
+    		Remote.sendGET(url, headers,httpHeaders);
     	}
     	else if (httpMethod.equalsIgnoreCase("POST"))
     	{
-    		Remote.sendPOST(data, uri, headers,httpHeaders);
+    		Remote.sendPOST(data, url, headers,httpHeaders);
     	}
     	return null;
     }
@@ -261,5 +275,9 @@ public class Interswitch {
     {
     	return TransactionSecurity.getAuthData(publicExponent, publicModulus, Interswitch.AUTH_DATA_VERSION, pan, expDate, cvv, pin);
     }
+    
+	public String getMacData(HashMap<String, String> additionalSecureData) throws Exception {
+		return TransactionSecurity.getMacData(additionalSecureData);
+	}
 
 }

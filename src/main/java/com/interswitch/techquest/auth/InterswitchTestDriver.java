@@ -8,22 +8,23 @@ import com.interswitch.techquest.auth.utils.ConstantUtils;
 
 public class InterswitchTestDriver {
 
-	static Interswitch interswitch = new Interswitch("IKIAF6C068791F465D2A2AA1A3FE88343B9951BAC9C3", "FTbMeBD7MtkGBQJw1XoM74NaikuPL13Sxko1zb0DMjI=");
-	static Interswitch interswitchPayment = new Interswitch("IKIA9614B82064D632E9B6418DF358A6A4AEA84D7218", "XCTiBtLy1G9chAnyg0z3BcaFK4cVpwDg/GTw2EmjTZ8=");
-	static String publicCertPath = "../ewallet/src/main/resources/paymentgateway.crt";
+	static Interswitch interswitch = new Interswitch("IKIAF6C068791F465D2A2AA1A3FE88343B9951BAC9C3", "FTbMeBD7MtkGBQJw1XoM74NaikuPL13Sxko1zb0DMjI=",Interswitch.ENV_SANDBOX);
+	static Interswitch interswitchPayment = new Interswitch("IKIA9614B82064D632E9B6418DF358A6A4AEA84D7218", "XCTiBtLy1G9chAnyg0z3BcaFK4cVpwDg/GTw2EmjTZ8=",Interswitch.ENV_SANDBOX);
+	static Interswitch interswitchPwm = new Interswitch("IKIAD8CEC8152D8E720E2CC7961C8EBBCD391A0DA0B6", "79EsDAYDw1mPiLre/z5RiqfH0XgMd8n2uKkThJ9YyA4=",Interswitch.ENV_SANDBOX);
+	static String publicCertPath = "../interswitch-java/src/main/resources/paymentgateway.crt";
 	public static void main(String[] args) throws Exception 
 	{
 		HashMap<String, String> interswitchResponse = new HashMap<String, String>();
 		
 //		interswitchResponse = getPaymentInstrument();
-//		interswitchResponse = getQuicktellerBillers();
+		interswitchResponse = getQuicktellerBillers();
 //		interswitchResponse = getQuicktellerBillersCategorys();
 //		interswitchResponse = doTransactionInquiry();
 //		interswitchResponse = sendTransaction();
 //		interswitchResponse = doPayment();
 //		interswitchResponse = getPaymentStatus();
 //		interswitchResponse = getPaymentInstrumentEwallet();
-		interswitchResponse = generatePaycode();
+//		interswitchResponse = generatePaycode();
 		
 		
 		String responseCode = interswitchResponse.get(Interswitch.RESPONSE_CODE);
@@ -40,14 +41,14 @@ public class InterswitchTestDriver {
 	public static HashMap<String, String> getPaymentInstrument()throws Exception 
 	{
 		HashMap<String, String> interswitchResponse;
-		String phoneNumber = "2348065186175";
+		String phoneNumber = "2348056731576";
 		String scheme = ConstantUtils.SCHEME;
 		String merchantid = ConstantUtils.MERCHANT_ID;
 		String channel = ConstantUtils.CHANNEL;
 		String version = ConstantUtils.VERSION;
 		String transactionType = "getallpaymentmethods";
 		String httpMethod = ConstantUtils.GET;
-		String resourceUrl = ConstantUtils.BASE_URL+ConstantUtils.VERVE_BASE_URL + phoneNumber+ "/paymentmethods.json?scheme=" + scheme + "&channel="
+		String resourceUrl = ConstantUtils.VERVE_BASE_URL + phoneNumber+ "/paymentmethods.json?scheme=" + scheme + "&channel="
 				+ channel + "&merchantid=" + merchantid + "&version=" + version
 				+ "&transactionType=" + transactionType;
 		
@@ -66,7 +67,7 @@ public class InterswitchTestDriver {
 		HashMap<String, String> extraHeaders = new HashMap<String, String>();
 		extraHeaders.put(Interswitch.TERMINAL_ID, "3IWP0001");
 		String httpMethod = ConstantUtils.GET;
-		String resourceUrl = ConstantUtils.BASE_URL+ConstantUtils.QT_BASE_URL +"billers";
+		String resourceUrl = ConstantUtils.QT_BASE_URL +"billers";
 		interswitchResponse = interswitch.send(resourceUrl, httpMethod, null,extraHeaders);
 		return interswitchResponse;
 	}
@@ -81,7 +82,7 @@ public class InterswitchTestDriver {
 		HashMap<String, String> extraHeaders = new HashMap<String, String>();
 		extraHeaders.put(Interswitch.TERMINAL_ID, "3IWP0001");
 		String httpMethod = ConstantUtils.GET;
-		String resourceUrl = ConstantUtils.BASE_URL+ConstantUtils.QT_BASE_URL +"categorys";
+		String resourceUrl = ConstantUtils.QT_BASE_URL +"categorys";
 		interswitchResponse = interswitch.send(resourceUrl, httpMethod, null,extraHeaders);
 		return interswitchResponse;
 	}
@@ -96,7 +97,7 @@ public class InterswitchTestDriver {
 		HashMap<String, String> extraHeaders = new HashMap<String, String>();
 		extraHeaders.put(Interswitch.TERMINAL_ID, "3IWP0001");
 		String httpMethod = ConstantUtils.POST;
-		String resourceUrl = ConstantUtils.BASE_URL+ConstantUtils.QT_BASE_URL +"transactions/inquirys";
+		String resourceUrl = ConstantUtils.QT_BASE_URL +"transactions/inquirys";
 		
 		JSONObject json = new JSONObject();
 		json.put("requestReference", "0040556842");
@@ -118,14 +119,15 @@ public class InterswitchTestDriver {
 		HashMap<String, String> extraHeaders = new HashMap<String, String>();
 		extraHeaders.put(Interswitch.TERMINAL_ID, "3IWP0001");
 		String httpMethod = ConstantUtils.POST;
-		String resourceUrl = ConstantUtils.BASE_URL+ConstantUtils.QT_BASE_URL +"transactions";
+		String resourceUrl = ConstantUtils.QT_BASE_URL +"transactions";
 		
 		String pan = "6280511000000095";
+//		pan = "5060990580000217499";
 		String expDate = "5004";
 		String cvv2 = "111";
 		String pin = "1111";
 		
-		HashMap<String, String> secureParameters = interswitch.getSecureData(publicCertPath, pan, expDate, cvv2, pin);
+		HashMap<String, String> secureParameters = interswitch.getSecureData(pan, expDate, cvv2, pin,publicCertPath);
 		String pinData = secureParameters.get(ConstantUtils.PINBLOCK);
 		String secureData = secureParameters.get(ConstantUtils.SECURE);
 		
@@ -157,7 +159,7 @@ public class InterswitchTestDriver {
 		HashMap<String, String> interswitchResponse;
 		
 		String httpMethod = ConstantUtils.POST;
-		String resourceUrl = ConstantUtils.BASE_URL+ConstantUtils.PAYMENT_BASE_URL;
+		String resourceUrl = ConstantUtils.PAYMENT_BASE_URL;
 		
 		String pan = "6280511000000095";
 		String expDate = "5004";
@@ -195,7 +197,7 @@ public class InterswitchTestDriver {
 		extraHeaders.put("amount", "100");
 		extraHeaders.put("transactionRef", "IWP|T|Web|3IWP0001|QTFT|261016185145|00000041");
 		String httpMethod = ConstantUtils.GET;
-		String resourceUrl = ConstantUtils.BASE_URL+ConstantUtils.PAYMENT_BASE_URL;
+		String resourceUrl = ConstantUtils.PAYMENT_BASE_URL;
 		interswitchResponse = interswitchPayment.send(resourceUrl, httpMethod, null,extraHeaders);
 		return interswitchResponse;
 	}
@@ -208,9 +210,9 @@ public class InterswitchTestDriver {
 	{
 		HashMap<String, String> interswitchResponse;
 		String httpMethod = ConstantUtils.GET;
-		String resourceUrl = ConstantUtils.BASE_URL+ConstantUtils.EWALLET_BASE_URL+"instruments";
+		String resourceUrl = ConstantUtils.EWALLET_BASE_URL+"instruments";
 //		get access Token for URL redirect
-		String accessToken = "eyJhbGciOiJSUzI1NiJ9.eyJsYXN0TmFtZSI6InRlc3RlciIsIm1lcmNoYW50X2NvZGUiOiJNWDE4NyIsInByb2R1Y3Rpb25fcGF5bWVudF9jb2RlIjoiMDQyNTk0MTMwMjQ2IiwidXNlcl9uYW1lIjoiaXN3dGVzdGVyMkB5YWhvby5jb20iLCJyZXF1ZXN0b3JfaWQiOiIwMDExNzYxNDk5MiIsIm1vYmlsZU5vIjoiMjM0ODA1NjczMTU3NiIsInBheWFibGVfaWQiOiIyMzI0IiwiY2xpZW50X2lkIjoiSUtJQTk2MTRCODIwNjRENjMyRTlCNjQxOERGMzU4QTZBNEFFQTg0RDcyMTgiLCJmaXJzdE5hbWUiOiJ0ZXN0ZXJzIiwiZW1haWxWZXJpZmllZCI6dHJ1ZSwiYXVkIjpbImlzdy1jb2xsZWN0aW9ucyIsImlzdy1wYXltZW50Z2F0ZXdheSIsInBhc3Nwb3J0IiwidmF1bHQiXSwic2NvcGUiOlsicHJvZmlsZSJdLCJleHAiOjE0Nzc1NTIwODQsIm1vYmlsZU5vVmVyaWZpZWQiOnRydWUsImp0aSI6Ijg4OWJiMzQ2LTMwMzMtNDRkNS04MWY1LTUyZDM0ODk4MmM0NSIsImVtYWlsIjoiaXN3dGVzdGVyMkB5YWhvby5jb20iLCJwYXNzcG9ydElkIjoiZTI1MWYwZTktN2JjZi00Y2FlLThlOGItNTZkZjI1ZWQ4NWQwIiwicGF5bWVudF9jb2RlIjoiMDUxNDE5ODE1NDY4NSJ9.fqbIdX2Pyr1xkAkr3FRetA4pSdKGeZRoFeFBD2wtJXosMO4d2er1_YwuVLLcvlAS12LshLPwdPnPaDMN2uhEG-HzY38o4lPE64hUGJmNg_zUjZpfVg5bu--WxqSAKy64IDtVAhh9OwMkn10ZbuTSX0oOFOHwwlVYKs8jdDOUNVvAdAXlgP7_M28i-4HaOHxL-l_Ip_dBOML7BW7cQpLqbyVUmAF-Q0KQXi7XBR2KnSuiYENNGlN5hAJWTpsyt1pcQwTiZF3T5JpaiJC3R7jQlHrb8zTDqFgOS9I0T4wcbPyWn1XfBPkCORVpgygiDVIalC5zp0sZd73OEz9LYHzqGw";
+		String accessToken = "eyJhbGciOiJSUzI1NiJ9.eyJsYXN0TmFtZSI6ImVyaG9iYWdhLWFnb2Z1cmUiLCJtZXJjaGFudF9jb2RlIjoiTVgxODciLCJwcm9kdWN0aW9uX3BheW1lbnRfY29kZSI6IjA0MjU5NDEzMDI0NiIsInVzZXJfbmFtZSI6ImVyaG9iYWdhZXZhbnNAeWFob28uY29tIiwicmVxdWVzdG9yX2lkIjoiMDAxMTc2MTQ5OTIiLCJtb2JpbGVObyI6IjIzNDgwOTA2NzM1MjAiLCJwYXlhYmxlX2lkIjoiMjMyNCIsImNsaWVudF9pZCI6IklLSUE5NjE0QjgyMDY0RDYzMkU5QjY0MThERjM1OEE2QTRBRUE4NEQ3MjE4IiwiZmlyc3ROYW1lIjoiZXZhbnMiLCJlbWFpbFZlcmlmaWVkIjp0cnVlLCJhdWQiOlsiaXN3LWNvbGxlY3Rpb25zIiwiaXN3LXBheW1lbnRnYXRld2F5IiwicGFzc3BvcnQiLCJ2YXVsdCJdLCJzY29wZSI6WyJwcm9maWxlIl0sImV4cCI6MTQ3NzYwODU4OSwibW9iaWxlTm9WZXJpZmllZCI6dHJ1ZSwianRpIjoiMWUyNTQ0ZjAtMzZhZi00NzdjLWE0ZjItNTc2ODk1YTJjMjE0IiwiZW1haWwiOiJlcmhvYmFnYWV2YW5zQHlhaG9vLmNvbSIsInBhc3Nwb3J0SWQiOiI5YjYwY2NmMS1mYjA2LTRkZGQtODExZC00NDkxNDlkN2E5NjkiLCJwYXltZW50X2NvZGUiOiIwNTE0MTk4MTU0Njg1In0.RyXef2i9H5i9s3jInbviFqkazKnOhknrWe6gXvyqKGWOPdvKNt_AE4fjM4AoJCgq24cqIEfAXyIUKs6ysFxnOa7SbxQ5SOoSX2b_IxADoxAVYkSvomJ_Q6i6FSyQG3vszHrM4iza_oQXxSWjVXHtOsS3MNWYS7zDisfmqdlYrc1JfrK1zhnSvKPlNMyoCt1Wv2kTymTnS8TmYt2j84A-DUMpU8DU03obu66cxGXFRwncjWLz53LkEAaLJ9Of0bz98yriK6NB3MO-bhS12oBNxGaT1EB85keV_SUQh9dAaYZY6X0XdhZ4FiaL83IJHU_EHiXDTuUU992Qvnr8Ja7l3Q";
 		interswitchResponse = interswitchPayment.sendWithAccessToken(resourceUrl, httpMethod, null,accessToken);
 		return interswitchResponse;
 	}
@@ -225,28 +227,33 @@ public class InterswitchTestDriver {
 		HashMap<String, String> extraHeaders = new HashMap<String, String>();
 		extraHeaders.put("frontEndPartnerId", "455");
 		//get access Token for URL redirect
-		extraHeaders.put("ACCESS_TOKEN", "eyJhbGciOiJSUzI1NiJ9.eyJsYXN0TmFtZSI6InRlc3RlciIsIm1lcmNoYW50X2NvZGUiOiJNWDE4NyIsInByb2R1Y3Rpb25fcGF5bWVudF9jb2RlIjoiMDQyNTk0MTMwMjQ2IiwidXNlcl9uYW1lIjoiaXN3dGVzdGVyMkB5YWhvby5jb20iLCJyZXF1ZXN0b3JfaWQiOiIwMDExNzYxNDk5MiIsIm1vYmlsZU5vIjoiMjM0ODA1NjczMTU3NiIsInBheWFibGVfaWQiOiIyMzI0IiwiY2xpZW50X2lkIjoiSUtJQTk2MTRCODIwNjRENjMyRTlCNjQxOERGMzU4QTZBNEFFQTg0RDcyMTgiLCJmaXJzdE5hbWUiOiJ0ZXN0ZXJzIiwiZW1haWxWZXJpZmllZCI6dHJ1ZSwiYXVkIjpbImlzdy1jb2xsZWN0aW9ucyIsImlzdy1wYXltZW50Z2F0ZXdheSIsInBhc3Nwb3J0IiwidmF1bHQiXSwic2NvcGUiOlsicHJvZmlsZSJdLCJleHAiOjE0Nzc1NTI5MzUsIm1vYmlsZU5vVmVyaWZpZWQiOnRydWUsImp0aSI6IjkwNDU4Njk0LWMyMjctNDM5Mi1iMmNlLTY5YmY5YTE3MmMxMyIsImVtYWlsIjoiaXN3dGVzdGVyMkB5YWhvby5jb20iLCJwYXNzcG9ydElkIjoiZTI1MWYwZTktN2JjZi00Y2FlLThlOGItNTZkZjI1ZWQ4NWQwIiwicGF5bWVudF9jb2RlIjoiMDUxNDE5ODE1NDY4NSJ9.g8f1uoPxiEH8Ftjt4A796_CvL1x5jmjzgq5uNU65ZNMAOk81Q9IUnA2Q5ND9d9MVVSp60xi18useDRZSlnl3BgD-Ol2oPfY0fQWL65MkqmePPfNleEzQPDEaoD3tzOYZZj-y-aNsN1dPv4hlt7W6tOSGvxFbhbKDz4SL2rtyo5eija8mrtZLeFbRz_hPJCoNpF0iOJkJIaebPdoId-tWQJ1Lg9n8Qn5bsNHBJNmjiX2TRFnPqfKlfEYHFRgWzxLaB3oJs66C2xFgjWIOqzWmISD7q_QAt7uFPZZLb4xoar8IyTDlDeJ46U_bQao1UkOVxYtvxEs_6XBSmihA84Oq-Q");
+//		extraHeaders.put("ACCESS_TOKEN", "eyJhbGciOiJSUzI1NiJ9.eyJsYXN0TmFtZSI6IkpBTSIsIm1lcmNoYW50X2NvZGUiOiJNWDE4NyIsInByb2R1Y3Rpb25fcGF5bWVudF9jb2RlIjoiMDQyNTk0MTMwMjQ2IiwidXNlcl9uYW1lIjoiYXBpLWphbUBpbnRlcnN3aXRjaGdyb3VwLmNvbSIsInJlcXVlc3Rvcl9pZCI6IjAwMTE3NjE0OTkyIiwibW9iaWxlTm8iOiIyMzQ4MDk4Njc0NTIzIiwicGF5YWJsZV9pZCI6IjIzMjQiLCJjbGllbnRfaWQiOiJJS0lBOTYxNEI4MjA2NEQ2MzJFOUI2NDE4REYzNThBNkE0QUVBODRENzIxOCIsImZpcnN0TmFtZSI6IkFQSSIsImVtYWlsVmVyaWZpZWQiOnRydWUsImF1ZCI6WyJpc3ctY29sbGVjdGlvbnMiLCJpc3ctcGF5bWVudGdhdGV3YXkiLCJwYXNzcG9ydCIsInZhdWx0Il0sInNjb3BlIjpbInByb2ZpbGUiXSwiZXhwIjoxNDc3NTk5MDMwLCJtb2JpbGVOb1ZlcmlmaWVkIjp0cnVlLCJqdGkiOiI4ZWNhNjY4My1mZGE0LTQ2MzgtYjllNi0xOWE2MDg2M2JiYzYiLCJlbWFpbCI6ImFwaS1qYW1AaW50ZXJzd2l0Y2hncm91cC5jb20iLCJwYXNzcG9ydElkIjoiNjExZGY3NmEtYjQzMi00NzM3LTljNjQtNzYwN2RhZGNhY2FkIiwicGF5bWVudF9jb2RlIjoiMDUxNDE5ODE1NDY4NSJ9.ObqEaUR9NwF7PXI7RnM8-4R9FBVTHa-2VUiFHXBJAPQwck5qNHNupxfK1FB6o6C4YmXBsCxlNpk9QklUk-6eDasyRKjqHrBSiam7qZoim2TIiH_UCEdlV917U8iilO5uVuaeI-ISclI7qiHO9JRBwoUWBFVkPPrZkB-OarK0lcHlJ_F23rrE0LerQeMktG9GURYpi-uEaTzJ83qhm6OghHMbq5D7ax3_bHEwui0ri7ez8mbA1jObsDcYMKKUZprSTaFUprIHP3i9OVVK6dAYrnjWhTH0PL0lPATLMrmCs_Xy9cH5lXf_sKO-dQPi61zLLygMBGqDIcL4CSPPCUOV5g");
 		String httpMethod = ConstantUtils.POST;
 		
-		String pan = "6280511000000095";
-		String expDate = "5004";
-		String cvv2 = "111";
+		String pan = "";//"0000000000000000";
+		String expDate = "";
+		String cvv2 = "";
 		String pin = "1111";
 		
-		HashMap<String, String> secureParameters = interswitch.getSecureData(publicCertPath, pan, expDate, cvv2, pin);
-		String pinData = secureParameters.get(ConstantUtils.PINBLOCK);
-		String secureData = secureParameters.get(ConstantUtils.SECURE);
-		
-		double amount = 100;
+		double amount = 100000;
 		String ttid = "812";
-		String msisdn = "07032479501";
-		String paymentMethodIdentifier = "48FF5C7F6A3B4C4C961AF6E683D95909";
+		String msisdn = "2348090673520";
+		String paymentMethodIdentifier = "FEED1FCDDBD14AA1822FD1B9254B4C43";
 		String payWithMobileChannel = "ATM";
 		String tokenLifeTimeInMinutes = "90";
 		String oneTimePin = "1234";
-		String macData = "";
 		
-		String resourceUrl = ConstantUtils.BASE_URL+ConstantUtils.PWM_BASE_URL +msisdn+"/tokens";
+		HashMap<String,String> additionalSecureData = new HashMap<String, String>();
+		additionalSecureData.put("msisdn",msisdn);
+		additionalSecureData.put("ttid", ttid);
+		additionalSecureData.put("cardName", "default");
+		
+		
+		HashMap<String, String> secureParameters = interswitchPwm.getSecureData(pan, expDate, cvv2, pin,additionalSecureData,publicCertPath);
+		String pinData = secureParameters.get(ConstantUtils.PINBLOCK);
+		String secureData = secureParameters.get(ConstantUtils.SECURE);
+		
+		String resourceUrl = ConstantUtils.PWM_BASE_URL +msisdn+"/tokens";
 		
 		JSONObject json = new JSONObject();
 		json.put("amount", amount);
@@ -255,12 +262,11 @@ public class InterswitchTestDriver {
 		json.put("payWithMobileChannel", payWithMobileChannel);
 		json.put("tokenLifeTimeInMinutes", tokenLifeTimeInMinutes);
 		json.put("oneTimePin", oneTimePin);
-		json.put("macData", macData);
 		json.put("pinData", pinData);
-		json.put("secureData", secureData);
+		json.put("secure", secureData);
 		String jsonData = json.toString();
 		
-		interswitchResponse = interswitch.send(resourceUrl, httpMethod, jsonData,extraHeaders);
+		interswitchResponse = interswitchPwm.send(resourceUrl, httpMethod, jsonData,extraHeaders);
 		return interswitchResponse;
 	}
 
