@@ -58,8 +58,8 @@ public class Remote {
 	
 		HashMap<String, String> responseMap = new HashMap<String, String>();
 		URL obj = new URL(resourceUrl);
-		//HttpsURLConnection con = (HttpsURLConnection) obj.openConnection();
-		HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+		HttpsURLConnection con = (HttpsURLConnection) obj.openConnection();
+		//HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 		
 		con.setRequestMethod("GET");
 		con.setRequestProperty("Authorization",interswitchAuth.get(Interswitch.AUTHORIZATION));

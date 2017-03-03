@@ -16,7 +16,7 @@ public class Interswitch {
 
     public static final String SANDBOX_BASE_URL = "https://sandbox.interswitchng.com/";
     public static final String PRODUCTION_BASE_URL = "https://saturn.interswitchng.com/";
-    private static final String DEV_BASE_URL = "http://172.25.20.56:9080/";
+    private static final String DEV_BASE_URL = "https://qa.interswitchng.com/";
     public static final String PASSPORT_RESOURCE_URL = "passport/oauth/token";
 
     public static final String TIMESTAMP = "TIMESTAMP";
