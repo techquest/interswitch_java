@@ -2,12 +2,14 @@ package com.interswitch.techquest.auth.helpers;
 
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map.Entry;
 
 import javax.net.ssl.HttpsURLConnection;
+
 import com.interswitch.techquest.auth.Interswitch;
 
 public class Remote {
@@ -56,7 +58,8 @@ public class Remote {
 	
 		HashMap<String, String> responseMap = new HashMap<String, String>();
 		URL obj = new URL(resourceUrl);
-		HttpsURLConnection con = (HttpsURLConnection) obj.openConnection();
+		//HttpsURLConnection con = (HttpsURLConnection) obj.openConnection();
+		HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 		
 		con.setRequestMethod("GET");
 		con.setRequestProperty("Authorization",interswitchAuth.get(Interswitch.AUTHORIZATION));
@@ -150,7 +153,8 @@ public class Remote {
 		HashMap<String, String> responseMap = new HashMap<String, String>();
 		
 		URL obj = new URL(resourceUrl);
-		HttpsURLConnection con = (HttpsURLConnection) obj.openConnection();
+		//HttpsURLConnection con = (HttpsURLConnection) obj.openConnection();
+		HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 		con.setRequestMethod("POST");
 		con.setRequestProperty("Authorization", interswitchAuth.get(Interswitch.AUTHORIZATION));
 		con.setRequestProperty("Timestamp", interswitchAuth.get(Interswitch.TIMESTAMP));

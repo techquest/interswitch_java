@@ -8,6 +8,8 @@ import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.InetSocketAddress;
+import java.net.Proxy;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
@@ -24,7 +26,7 @@ public class Passport {
     	
     	HashMap<String,String> responseMap = new HashMap<String, String>();
     	
-    	String passportUrl = passportBaseUrl+Interswitch.PASSPORT_RESOURCE_URL;
+    	String passportUrl = passportBaseUrl + Interswitch.PASSPORT_RESOURCE_URL;
     	String accesToken = null;
     	URL obj = new URL(passportUrl);
 
