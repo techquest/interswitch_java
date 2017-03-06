@@ -95,20 +95,12 @@ public class RequestHeaders {
     private static String getSignature(String clientId, String clientSecretKey, String resourceUrl, String httpMethod, long timestamp, String nonce) throws Exception {
         String https = "https";
         String http = "http";
-        if (!resourceUrl.toLowerCase().contains(https.subSequence(0, https.length()))) {
+        /*if (!resourceUrl.toLowerCase().contains(https.subSequence(0, https.length()))) {
             resourceUrl = resourceUrl.replace(http, https);
-        }
+        }*/
         resourceUrl = URLEncoder.encode(resourceUrl, Interswitch.ISO_8859_1);
         String signatureCipher = httpMethod + "&" + resourceUrl + "&" + timestamp + "&" + nonce + "&" + clientId + "&" + clientSecretKey;
-//        if (transactionParameters != null && transactionParameters.length > 0) {
-//            String transactionParameterTemp = "";
-//            for (String transactionParameter : transactionParameters) {
-//                if (transactionParameter != null && !transactionParameter.isEmpty()) {
-//                    transactionParameterTemp = "&" + transactionParameter;
-//                }
-//            }
-//            signatureCipher = signatureCipher + transactionParameters;
-//        }
+
 
         MessageDigest messagedigest = MessageDigest.getInstance(Interswitch.SIGNATURE_METHOD_VALUE);
         byte[] signaturebytes = messagedigest.digest(signatureCipher.getBytes());
