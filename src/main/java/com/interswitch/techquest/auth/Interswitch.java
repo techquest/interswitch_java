@@ -92,7 +92,7 @@ public class Interswitch {
             return SANDBOX_BASE_URL;
         }
         else if(env.equalsIgnoreCase(ENV_DEV)){
-            return "http://172.26.40.117:6060/";
+            return DEV_BASE_URL;
         }
         else {
             return null;
