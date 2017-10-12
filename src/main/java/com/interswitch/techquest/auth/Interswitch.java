@@ -246,6 +246,66 @@ public class Interswitch {
         }
         return null;
     }
+    
+    
+    
+    // Send to Remote uri,httpMethod,jsonData
+    public HashMap<String, String> sendWithInterswitchAuth(String uri, String httpMethod, String jsonData) throws Exception {
+        String url = baseUrl + uri;
+        HashMap<String, String> headers = RequestHeaders.getISWAuthSecurityHeaders(clientId, clientSecret, url, httpMethod);
+        
+        if (httpMethod.equalsIgnoreCase("GET")) {
+            return Remote.sendGET(url, headers);
+        } else if (httpMethod.equalsIgnoreCase("POST")) {
+            return Remote.sendPOST(jsonData, url, headers);
+        }
+        
+        return new HashMap<String, String>();
+    }
+
+    // Send to Remote uri,httpMethod,jsonData,additonalSignedParameters,extraHttpHeaders
+    public HashMap<String, String> sendWithInterswitchAuth(String uri, String httpMethod, String jsonData, String additonalSignedParameters, HashMap<String, String> extraHttpHeaders) throws Exception {
+        String url = baseUrl + uri;
+        HashMap<String, String> headers = RequestHeaders.getISWAuthSecurityHeaders(clientId, clientSecret, url, httpMethod, additonalSignedParameters);
+
+            if (httpMethod.equalsIgnoreCase("GET")) {
+                return Remote.sendGET(url, headers, extraHttpHeaders);
+            } else if (httpMethod.equalsIgnoreCase("POST")) {
+                return Remote.sendPOST(jsonData, url, headers, extraHttpHeaders);
+            }
+
+            return new HashMap<String, String>();
+    }
+
+    // Send to Remote uri,httpMethod,jsonData,extraHttpHeaders
+    public HashMap<String, String> sendWithInterswitchAuth(String uri, String httpMethod, String jsonData, HashMap<String, String> extraHttpHeaders) throws Exception {
+        String url = baseUrl + uri;
+        HashMap<String, String> headers = RequestHeaders.getISWAuthSecurityHeaders(clientId, clientSecret, url, httpMethod);
+        
+            if (httpMethod.equalsIgnoreCase("GET")) {
+                return Remote.sendGET(url, headers, extraHttpHeaders);
+            } else if (httpMethod.equalsIgnoreCase("POST")) {
+                return Remote.sendPOST(jsonData, url, headers, extraHttpHeaders);
+            }
+        
+
+            return new HashMap<String, String>();
+    }
+
+    // Send to Remote uri,httpMethod,jsonData,additonalSignedParameters
+    public HashMap<String, String> sendWithInterswitchAuth(String uri, String httpMethod, String jsonData, String signedParameters) throws Exception {
+        String url = baseUrl + uri;
+        HashMap<String, String> headers = RequestHeaders.getISWAuthSecurityHeaders(clientId, clientSecret, url, httpMethod, signedParameters);
+
+            if (httpMethod.equalsIgnoreCase("GET")) {
+                return Remote.sendGET(url, headers);
+            } else if (httpMethod.equalsIgnoreCase("POST")) {
+                return Remote.sendPOST(jsonData, url, headers);
+            }
+
+        return new HashMap<String, String>();
+    }
+    
 
     public String getAuthData(String publicCert, String pan, String expDate, String cvv, String pin) throws Exception {
         return TransactionSecurity.getAuthData(publicCert, Interswitch.AUTH_DATA_VERSION, pan, expDate, cvv, pin);
