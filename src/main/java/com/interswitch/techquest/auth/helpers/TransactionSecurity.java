@@ -68,7 +68,7 @@ public class TransactionSecurity {
         return authData;
     }
 
-    public HashMap<String, String> getSecureData(String publicCertPath, String pan, String expDate, String cvv, String pin) throws Exception {
+    public HashMap<String, String> getSecureData(String publicCertPath, String pan, String expDate, String cvv, String pin, int macVer) throws Exception {
 
         HashMap<String, String> secureData = new HashMap<String, String>();
 
@@ -108,7 +108,9 @@ public class TransactionSecurity {
         }
 
         String macData = "";
-        macBytes = Hex.decode(getMAC(macData, macDesKey, 11));
+//        macBytes = Hex.decode(getMAC(macData, macDesKey, 11));
+        String mac = getMAC(macData, macDesKey, macVer);
+        macBytes = Hex.decode(mac);
         footerBytes = HexConverter("5A");
 
         System.arraycopy(headerBytes, 0, secureBytes, 0, 1);
@@ -134,11 +136,12 @@ public class TransactionSecurity {
 
         secureData.put(Interswitch.SECURE, encrytedSecure);
         secureData.put(Interswitch.PINBLOCK, pinBlock);
+        secureData.put(Interswitch.MACDATA, mac);
 
         return secureData;
     }
     
-    public HashMap<String, String> getSecureData(String publicExponent, String publicModulus, String pan, String expDate, String cvv, String pin) throws Exception {
+    public HashMap<String, String> getSecureData(String publicExponent, String publicModulus, String pan, String expDate, String cvv, String pin, int macVer) throws Exception {
 
         HashMap<String, String> secureData = new HashMap<String, String>();
 
@@ -178,7 +181,9 @@ public class TransactionSecurity {
         }
 
         String macData = "";
-        macBytes = Hex.decode(getMAC(macData, macDesKey, 11));
+//        macBytes = Hex.decode(getMAC(macData, macDesKey, 11));
+        String mac = getMAC(macData, macDesKey, macVer);
+        macBytes = Hex.decode(mac);
         footerBytes = HexConverter("5A");
 
         System.arraycopy(headerBytes, 0, secureBytes, 0, 1);
@@ -204,11 +209,12 @@ public class TransactionSecurity {
 
         secureData.put(Interswitch.SECURE, encrytedSecure);
         secureData.put(Interswitch.PINBLOCK, pinBlock);
+        secureData.put(Interswitch.MACDATA, mac);
 
         return secureData;
     }
     
-    public HashMap<String, String> getSecureData(String publicCertPath, String pan, String expDate, String cvv, String pin, HashMap<String,String>transactionParameters) throws Exception {
+    public HashMap<String, String> getSecureData(String publicCertPath, String pan, String expDate, String cvv, String pin, HashMap<String,String>transactionParameters, int macVer) throws Exception {
 
         HashMap<String, String> secureData = new HashMap<String, String>();
 
@@ -248,7 +254,8 @@ public class TransactionSecurity {
         }
 
         String macData = getMACDataVersion9(transactionParameters);
-        macBytes = Hex.decode(getMAC(macData, macDesKey, 11));
+        String mac = getMAC(macData, macDesKey, macVer);
+        macBytes = Hex.decode(mac);
         footerBytes = HexConverter("5A");
 
         System.arraycopy(headerBytes, 0, secureBytes, 0, 1);
@@ -274,12 +281,13 @@ public class TransactionSecurity {
 
         secureData.put(Interswitch.SECURE, encrytedSecure);
         secureData.put(Interswitch.PINBLOCK, pinBlock);
+        secureData.put(Interswitch.MACDATA, mac);
 
         return secureData;
     }
     
     
-    public HashMap<String, String> getSecureData(String publicExponent, String publicModulus, String pan, String expDate, String cvv, String pin, HashMap<String,String>transactionParameters) throws Exception {
+    public HashMap<String, String> getSecureData(String publicExponent, String publicModulus, String pan, String expDate, String cvv, String pin, HashMap<String,String>transactionParameters, int macVer) throws Exception {
 
         HashMap<String, String> secureData = new HashMap<String, String>();
 
@@ -319,7 +327,9 @@ public class TransactionSecurity {
         }
 
         String macData = getMACDataVersion9(transactionParameters);
-        macBytes = Hex.decode(getMAC(macData, macDesKey, 11));
+//        macBytes = Hex.decode(getMAC(macData, macDesKey, 11));
+        String mac = getMAC(macData, macDesKey, macVer);
+        macBytes = Hex.decode(mac);
         footerBytes = HexConverter("5A");
 
         System.arraycopy(headerBytes, 0, secureBytes, 0, 1);
@@ -345,6 +355,7 @@ public class TransactionSecurity {
 
         secureData.put(Interswitch.SECURE, encrytedSecure);
         secureData.put(Interswitch.PINBLOCK, pinBlock);
+        secureData.put(Interswitch.MACDATA, mac);
 
         return secureData;
     }

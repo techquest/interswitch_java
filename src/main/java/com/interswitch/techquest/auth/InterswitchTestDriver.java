@@ -126,8 +126,9 @@ public class InterswitchTestDriver {
 		String expDate = "5004";
 		String cvv2 = "111";
 		String pin = "1111";
+		int macVer = 11;
 		
-		HashMap<String, String> secureParameters = interswitch.getSecureData(pan, expDate, cvv2, pin,publicCertPath);
+		HashMap<String, String> secureParameters = interswitch.getSecureData(pan, expDate, cvv2, pin,publicCertPath, macVer);
 		String pinData = secureParameters.get(ConstantUtils.PINBLOCK);
 		String secureData = secureParameters.get(ConstantUtils.SECURE);
 		
@@ -247,9 +248,10 @@ public class InterswitchTestDriver {
 		additionalSecureData.put("msisdn",msisdn);
 		additionalSecureData.put("ttid", ttid);
 		additionalSecureData.put("cardName", "default");
+		int macVer = 11;
 		
 		
-		HashMap<String, String> secureParameters = interswitchPwm.getSecureData(pan, expDate, cvv2, pin,additionalSecureData,publicCertPath);
+		HashMap<String, String> secureParameters = interswitchPwm.getSecureData(pan, expDate, cvv2, pin,additionalSecureData,publicCertPath, macVer);
 		String pinData = secureParameters.get(ConstantUtils.PINBLOCK);
 		String secureData = secureParameters.get(ConstantUtils.SECURE);
 		
